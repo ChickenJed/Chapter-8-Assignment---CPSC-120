@@ -1,2 +1,253 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+// Christian Verry
+// 6/1/2020
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cctype>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+#define SIZE 26
+void letterCount(string str);
+void wordCount(string str);
+void Programming_Project2();
+
+void noMiddle(string fName, string mName);
+void arrangeName(string fName, string mName, string lName);
+void Programming_Project4();
+
+void loveReplace(string str1);
+void Programming_Project5();
+
+vector<string> split(string target, string delimeter);
+void Programming_Project14();
+
+bool anagram(string str1, string str2);
+void Programming_Project15();
+
+int main()
+{
+	do
+	{
+		system("cls");
+		cout << "\n\t\tCHAPTER 8 by your Christian Verry\n";
+		cout << "\t================================\n";
+		cout << "\t  0. Exit\n";
+		cout << "\t  2. Programming Project 2\n";
+		cout << "\t  4. Programming Project 4\n";
+		cout << "\t  5. Programming Project 5\n";
+		cout << "\t 14. Programming Project 14\n";
+		cout << "\t 15. Programming Project 15\n";
+		cout << "\t================================\n";
+		cout << "\t\toption: ";
+
+		int option;
+		cin >> option;
+		cin.clear();
+		cin.ignore(999, '\n');
+
+		system("cls");
+		switch (option)
+		{
+		case 2: Programming_Project2(); break;
+		case 4: Programming_Project4(); break;
+		case 5: Programming_Project5(); break;
+		case 14: Programming_Project14(); break;
+		case 15: Programming_Project15(); break;
+		default: exit(1);
+		}
+
+		cout << "\n";
+		system("pause");
+	} while (true);
+
+	return 0;
+}
+
+bool anagram(string str1, string str2)
+{
+	int n1 = str1.length();
+	int n2 = str2.length();
+
+	if (n1 != n2)
+		return false;
+
+	sort(str1.begin(), str1.end());
+	sort(str2.begin(), str2.end());
+
+	for (int i = 0; i < n1; i++)
+		if (str1[i] != str2[i])
+			return false;
+
+	return true;
+
+}
+
+void Programming_Project15()
+{
+	cout << "Enter string one: ";
+	string str1;
+	getline(cin, str1, '\n');
+	cout << "Enter string two: ";
+	string str2;
+	getline(cin, str2, '\n');
+
+	transform(str1.begin(), str1.end(), str1.begin(), ::tolower);
+	transform(str2.begin(), str2.end(), str2.begin(), ::tolower);
+
+	if (anagram(str1, str2))
+		cout << "The two string ARE an anagram of each other!";
+	else
+		cout << "The two strings ARE NOT an anagram of each other!";
+}
+
+vector<string> split(string target, string delimeter)
+{
+	int index, lastindex;
+	vector<string> list;
+
+	lastindex = 0;
+	index = target.find(delimeter);
+	while (index != string::npos)
+	{
+		string s;
+		s = target.substr(lastindex, index - lastindex);
+		list.push_back(s);
+		lastindex = index + 1;
+		index = target.find(delimeter, lastindex);
+	}
+
+	list.push_back(target.substr(lastindex, target.length() - lastindex));
+	return list;
+}
+
+void Programming_Project14()
+{
+	vector<string> list;
+
+	list = split("do re mi fa so la ti do", " ");
+	for (unsigned int i = 0; i < list.size(); i++)
+	{
+		cout << list[i] << '\n';
+	}
+}
+
+void loveReplace(string str1)
+{
+	string finalSentence = "";
+	string tempStr = "";
+	stringstream ss;
+	ss << str1;
+	
+	while (!ss.eof())
+	{
+		ss >> tempStr;
+
+		if (tempStr.length() == 4)
+		{
+			if (isupper(tempStr[0]))
+				finalSentence += "Love ";
+			else
+				finalSentence += "love ";
+		}
+		else
+			finalSentence += tempStr + " ";
+	}
+
+	cout << "\nFinal Sentence: \n" << finalSentence << ".\n";
+}
+
+void Programming_Project5()
+{
+	string sentence = "";
+
+	cout << "Enter a sentence and end with a period(.): ";
+	getline(cin, sentence);
+
+	sentence.erase(remove(sentence.begin(), sentence.end(), '.'), sentence.end());
+
+	loveReplace(sentence);
+}
+
+void noMiddle(string fName, string mName)
+{
+	cout << '\n' << mName << ", " << fName;
+}
+
+void arrangeName(string fName, string mName, string lName)
+{
+	char middleInitial = mName.at(0);
+	cout << '\n' << lName << ", " << fName << " " << middleInitial << ".\n";
+}
+
+void Programming_Project4()
+{
+	cout << "If you do not have a middle name press space and enter '0'\n";
+	cout << "\nEnter your full name: ";
+	string fName, mName, lName;
+	cin >> fName >> mName >> lName;
+
+	if (lName == "0")
+		noMiddle(fName, mName);
+	else
+		arrangeName(fName, mName, lName);
+}
+
+void letterCount(string str)
+{
+	int n = str.size();
+	int freq[SIZE];
+
+	str.erase(remove(str.begin(), str.end(), ' '), str.end());
+	transform(str.begin(), str.end(), str.begin(), ::tolower);
+	
+
+	memset(freq, 0, sizeof(freq));
+
+	for (int i = 0; i < n; i++)
+		freq[str[i] - 'a']++;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (str[i] == '.' || str[i] == '!' || str[i] == '?')
+			break;
+		if (freq[str[i] - 'a'] != 0)
+		{
+			cout << str[i] << ' ' << freq[str[i] - 'a'] << "\n";
+
+			freq[str[i] - 'a'] = 0;
+		}
+	}
+}
+
+void wordCount(string str)
+{
+	int count = 0;
+
+	for (int i = 0; i < str.length(); i++)
+	{
+		if (str[i] == ' ')
+			count++;
+		if (str[i] == ',')
+			count++;
+		if (str[i] == '.')
+			count++;
+	}
+
+	cout << '\n' << count << " words";
+}
+
+void Programming_Project2()
+{
+	cout << "Enter a sentence and end with a period: ";
+	string str1;
+	getline(cin, str1, '\n');
+
+	wordCount(str1);
+	cout << '\n';
+	letterCount(str1);
+}
